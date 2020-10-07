@@ -20,7 +20,7 @@ public class ConteinerController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ConteinerDTO criar(@RequestBody ConteinerDTO dto) {
+    public ConteinerDTO criar(@RequestBody @Valid ConteinerDTO dto) {
         Conteiner entity = modelMapper.map(dto, Conteiner.class);
         entity = service.salvar(entity);
         return modelMapper.map(entity, ConteinerDTO.class);

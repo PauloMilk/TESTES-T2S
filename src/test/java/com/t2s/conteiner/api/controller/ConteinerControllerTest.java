@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -64,6 +65,24 @@ public class ConteinerControllerTest {
                 .andExpect(jsonPath("categoria").value(conteinerDto.getCategoria()));
 
     }
+
+    @Test
+    @DisplayName("Deve lancar um erro de validacao quando nao houver dados suficientes para criacao do conteiner.")
+    public void erroDadosInsuficientes() throws Exception {
+        String json = new ObjectMapper().writeValueAsString(new ConteinerDTO());
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .post(CONTEINER_API)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(json);
+
+        mvc
+                .perform(request)
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("errors", hasSize(5)));
+
+    }
+
 
     private Conteiner getConteiner() {
         return Conteiner.builder()
