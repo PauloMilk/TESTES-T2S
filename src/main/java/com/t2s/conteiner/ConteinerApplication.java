@@ -1,13 +1,19 @@
 package com.t2s.conteiner;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class ConteinerApplication {
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
+    }
 
-	public static void main(String[] args) {
-		SpringApplication.run(ConteinerApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(ConteinerApplication.class, args);
+    }
 
 }
