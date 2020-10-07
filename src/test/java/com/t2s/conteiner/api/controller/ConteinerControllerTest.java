@@ -83,6 +83,23 @@ public class ConteinerControllerTest {
 
     }
 
+    @Test
+    @DisplayName("Deve lancar um erro de validacao quando informar um numero fora do padrao para criacao do conteiner.")
+    public void erroNumeroFormatoInvalido() throws Exception {
+        String json = new ObjectMapper().writeValueAsString(getInvalidConteinerDTO());
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .post(CONTEINER_API)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(json);
+
+        mvc
+                .perform(request)
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("errors", hasSize(1)));
+
+    }
+
 
     private Conteiner getConteiner() {
         return Conteiner.builder()
@@ -99,6 +116,16 @@ public class ConteinerControllerTest {
         return ConteinerDTO.builder()
                 .cliente("T2S")
                 .numero("ABCD1234567")
+                .tipo("20")
+                .status("cheio")
+                .categoria("importacao")
+                .build();
+    }
+
+    private ConteinerDTO getInvalidConteinerDTO() {
+        return ConteinerDTO.builder()
+                .cliente("T2S")
+                .numero("A2CD12345B7")
                 .tipo("20")
                 .status("cheio")
                 .categoria("importacao")

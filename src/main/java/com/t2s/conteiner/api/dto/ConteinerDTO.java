@@ -3,6 +3,7 @@ package com.t2s.conteiner.api.dto;
 import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 
 @Builder
 @Getter
@@ -14,7 +15,7 @@ public class ConteinerDTO {
 
     @NotEmpty
     private String cliente;
-    @NotEmpty
+    @NotEmpty @Pattern(regexp = "[A-z]{4}[0-9]{7}")
     private String numero;
     @NotEmpty
     private String tipo;
