@@ -4,6 +4,7 @@ package com.t2s.conteiner.api.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.t2s.conteiner.api.dto.ConteinerDTO;
 import com.t2s.conteiner.model.entity.Conteiner;
+import com.t2s.conteiner.model.enums.CategoriaConteinerEnum;
 import com.t2s.conteiner.service.ConteinerService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -86,7 +87,24 @@ public class ConteinerControllerTest {
     @Test
     @DisplayName("Deve lancar um erro de validacao quando informar um numero fora do padrao para criacao do conteiner.")
     public void erroNumeroFormatoInvalido() throws Exception {
-        String json = new ObjectMapper().writeValueAsString(getInvalidConteinerDTO());
+        String json = new ObjectMapper().writeValueAsString(getInvalidoNumeroConteinerDTO());
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .post(CONTEINER_API)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(json);
+
+        mvc
+                .perform(request)
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("errors", hasSize(1)));
+
+    }
+
+    @Test
+    @DisplayName("Deve lancar um erro de validacao quando informar um tipo fora do padrao para criacao do conteiner.")
+    public void erroTipoInvalido() throws Exception {
+        String json = new ObjectMapper().writeValueAsString(getInvalidoTipoConteinerDTO());
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
                 .post(CONTEINER_API)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -106,9 +124,9 @@ public class ConteinerControllerTest {
                 .id(1l)
                 .cliente("T2S")
                 .numero("ABCD1234567")
-                .tipo("20")
+                .tipo(20)
                 .status("cheio")
-                .categoria("importacao")
+                .categoria(CategoriaConteinerEnum.IMPORTACAO)
                 .build();
     }
 
@@ -116,19 +134,29 @@ public class ConteinerControllerTest {
         return ConteinerDTO.builder()
                 .cliente("T2S")
                 .numero("ABCD1234567")
-                .tipo("20")
+                .tipo(20)
                 .status("cheio")
-                .categoria("importacao")
+                .categoria("IMPORTACAO")
                 .build();
     }
 
-    private ConteinerDTO getInvalidConteinerDTO() {
+    private ConteinerDTO getInvalidoNumeroConteinerDTO() {
         return ConteinerDTO.builder()
                 .cliente("T2S")
                 .numero("A2CD12345B7")
-                .tipo("20")
+                .tipo(20)
                 .status("cheio")
-                .categoria("importacao")
+                .categoria("IMPORTACAO")
+                .build();
+    }
+
+    private ConteinerDTO getInvalidoTipoConteinerDTO() {
+        return ConteinerDTO.builder()
+                .cliente("T2S")
+                .numero("ABCD1234567")
+                .tipo(21)
+                .status("cheio")
+                .categoria("IMPORTACAO")
                 .build();
     }
 }
