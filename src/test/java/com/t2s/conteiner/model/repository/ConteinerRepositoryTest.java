@@ -1,9 +1,8 @@
-package com.t2s.conteiner.repository;
+package com.t2s.conteiner.model.repository;
 
 import com.t2s.conteiner.model.entity.Conteiner;
 import com.t2s.conteiner.model.enums.CategoriaConteinerEnum;
 import com.t2s.conteiner.model.enums.StatusConteinerEnum;
-import com.t2s.conteiner.model.repository.ConteinerRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
