@@ -142,7 +142,7 @@ public class ConteinerControllerTest {
     @Test
     @DisplayName("Deve lancar um erro de validacao quando informar um status fora do padrao para criacao do conteiner.")
     public void erroStatusInvalida() throws Exception {
-        String json = new ObjectMapper().writeValueAsString(getInvalidaStatusConteinerDTO());
+        String json = new ObjectMapper().writeValueAsString(getInvalidoStatusConteinerDTO());
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
                 .post(CONTEINER_API)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -248,14 +248,86 @@ public class ConteinerControllerTest {
                 .andExpect(jsonPath("errors[0]").value("Container não encontrado pelo id informado."));
     }
 
-    private ConteinerDTO getInvalidaStatusConteinerDTO() {
-        return ConteinerDTO.builder()
-                .cliente("T2S")
-                .numero("ABCD1234567")
-                .tipo(20)
-                .status("teste")
-                .categoria("IMPORTACAO")
-                .build();
+    @Test
+    @DisplayName("Deve atualizar um conteiner.")
+    public void atualizarConteiner() throws Exception {
+        Long id = 1l;
+        ConteinerDTO conteinerDto = getConteinerDTO();
+        conteinerDto.setStatus("VAZIO");
+        conteinerDto.setCliente("TESTE");
+        String json = new ObjectMapper().writeValueAsString(conteinerDto);
+
+        Conteiner containerSalvo = getConteiner();
+        BDDMockito.given(service.obterPeloId(id)).willReturn(Optional.of(containerSalvo));
+        Conteiner conteinerAtualizado = getConteiner();
+        containerSalvo.setStatus(StatusConteinerEnum.VAZIO);
+        conteinerAtualizado.setCliente("TESTE");
+        BDDMockito.given(service.atualizar(containerSalvo)).willReturn(containerSalvo);
+
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .put(CONTEINER_API.concat("/" + id))
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json);
+
+        mvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("id").value(id))
+                .andExpect(jsonPath("cliente").value(conteinerDto.getCliente()))
+                .andExpect(jsonPath("numero").value(conteinerDto.getNumero()))
+                .andExpect(jsonPath("tipo").value(conteinerDto.getTipo()))
+                .andExpect(jsonPath("status").value(conteinerDto.getStatus()))
+                .andExpect(jsonPath("categoria").value(conteinerDto.getCategoria()));
+
+    }
+
+    @Test
+    @DisplayName("Deve retornar erro ao tentar atualizar um conteiner pelo id inexistente.")
+    public void erroAtualizarConteinerIdInexistente() throws Exception {
+        Long id = 1l;
+        ConteinerDTO conteinerDto = getConteinerDTO();
+        String json = new ObjectMapper().writeValueAsString(conteinerDto);
+
+        BDDMockito.given(service.obterPeloId(id)).willReturn(Optional.empty());
+
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .put(CONTEINER_API.concat("/" + id))
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json);
+
+        mvc.perform(request)
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("errors", hasSize(1)))
+                .andExpect(jsonPath("errors[0]").value("Container não encontrado pelo id informado."));
+    }
+
+    @Test
+    @DisplayName("Deve retornar erro ao tentar atualizar um conteiner por um numero já cadastrado.")
+    public void erroAtualizarConteinerNumeroJaCadastrado() throws Exception {
+        Long id = 1l;
+        ConteinerDTO conteinerDto = getConteinerDTO();
+        conteinerDto.setStatus("VAZIO");
+        conteinerDto.setCliente("TESTE");
+        String json = new ObjectMapper().writeValueAsString(conteinerDto);
+
+        Conteiner containerSalvo = getConteiner();
+        BDDMockito.given(service.obterPeloId(id)).willReturn(Optional.of(containerSalvo));
+        Conteiner conteinerAtualizado = getConteiner();
+        containerSalvo.setStatus(StatusConteinerEnum.VAZIO);
+        conteinerAtualizado.setCliente("TESTE");
+        BDDMockito.given(service.atualizar(containerSalvo)).willThrow( new NumeroConteinerException("Container já cadastrado com esse número."));
+
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .put(CONTEINER_API.concat("/" + id))
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json);
+
+        mvc.perform(request)
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("errors", hasSize(1)))
+                .andExpect(jsonPath("errors[0]").value("Container já cadastrado com esse número."));
     }
 
     private ConteinerDTO getInvalidaCategoriaConteinerDTO() {
@@ -285,6 +357,16 @@ public class ConteinerControllerTest {
                 .numero("ABCD1234567")
                 .tipo(20)
                 .status("CHEIO")
+                .categoria("IMPORTACAO")
+                .build();
+    }
+
+    private ConteinerDTO getInvalidoStatusConteinerDTO() {
+        return ConteinerDTO.builder()
+                .cliente("T2S")
+                .numero("ABCD1234567")
+                .tipo(20)
+                .status("TESTE")
                 .categoria("IMPORTACAO")
                 .build();
     }

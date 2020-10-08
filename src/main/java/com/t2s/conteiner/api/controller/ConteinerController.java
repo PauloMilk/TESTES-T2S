@@ -3,6 +3,8 @@ package com.t2s.conteiner.api.controller;
 import com.t2s.conteiner.api.dto.ConteinerDTO;
 import com.t2s.conteiner.exception.RecursoNaoEncontradoException;
 import com.t2s.conteiner.model.entity.Conteiner;
+import com.t2s.conteiner.model.enums.CategoriaConteinerEnum;
+import com.t2s.conteiner.model.enums.StatusConteinerEnum;
 import com.t2s.conteiner.service.ConteinerService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -38,5 +40,17 @@ public class ConteinerController {
     public void removerPeloId(@PathVariable Long id) {
         Conteiner conteiner = service.obterPeloId(id).orElseThrow(() -> new RecursoNaoEncontradoException("Container não encontrado pelo id informado."));
         service.remover(conteiner);
+    }
+
+    @PutMapping("{id}")
+    public ConteinerDTO atualizar(@PathVariable Long id, @RequestBody @Valid ConteinerDTO dto) {
+        Conteiner conteiner = service.obterPeloId(id).orElseThrow( () -> new RecursoNaoEncontradoException("Container não encontrado pelo id informado."));
+        conteiner.setCliente(dto.getCliente());
+        conteiner.setStatus(StatusConteinerEnum.valueOf(dto.getStatus()));
+        conteiner.setCategoria(CategoriaConteinerEnum.valueOf(dto.getCategoria()));
+        conteiner.setNumero(dto.getNumero());
+        conteiner.setTipo(dto.getTipo());
+        conteiner = service.atualizar(conteiner);
+        return modelMapper.map(conteiner, ConteinerDTO.class);
     }
 }

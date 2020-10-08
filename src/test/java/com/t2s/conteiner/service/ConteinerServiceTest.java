@@ -110,6 +110,65 @@ public class ConteinerServiceTest {
         verify(repository, Mockito.never()).delete(conteiner);
     }
 
+    @Test
+    @DisplayName("Deve atualizar um conteiner")
+    public void atualizarContainerComSucesso() {
+
+        Conteiner conteiner = getConteiner();
+        Conteiner conteinerReposta = getConteinerComId();
+        Mockito.when(repository.existsByNumero(conteiner.getNumero())).thenReturn(false);
+        Mockito.when(repository.save(conteiner)).thenReturn(conteinerReposta);
+        conteiner.setId(1l);
+        Conteiner conteinerSalvo = service.atualizar(conteiner);
+
+        assertThat(conteinerSalvo.getId()).isNotNull();
+        assertThat(conteinerSalvo.getCliente()).isEqualTo(conteiner.getCliente());
+        assertThat(conteinerSalvo.getNumero()).isEqualTo(conteiner.getNumero());
+        assertThat(conteinerSalvo.getStatus()).isEqualTo(conteiner.getStatus());
+        assertThat(conteinerSalvo.getTipo()).isEqualTo(conteiner.getTipo());
+        assertThat(conteinerSalvo.getCategoria()).isEqualTo(conteiner.getCategoria());
+
+    }
+
+    @Test
+    @DisplayName("Deve dar erro ao tentar atualizar um conteiner com numero ja existente")
+    public void erroAtualizarConteinerNumeroJaExistente() {
+
+        Conteiner conteiner = getConteiner();
+        Conteiner conteinerReposta = getConteinerComId();
+        Mockito.when(repository.existsByNumero(conteiner.getNumero())).thenReturn(true);
+
+        Throwable exception = Assertions.catchThrowable(
+                () -> service.atualizar(conteiner)
+        );
+
+        assertThat(exception)
+                .isInstanceOf(NumeroConteinerException.class)
+                .hasMessage("Container já cadastrado com esse número.");
+
+        verify(repository, Mockito.never()).delete(conteiner);
+
+    }
+
+    @Test
+    @DisplayName("Deve dar erro ao tentar atualizar um conteiner sem id")
+    public void erroAtualizarConteinerIdInexistente() {
+
+        Conteiner conteiner = getConteiner();
+        Mockito.when(repository.existsByNumero(conteiner.getNumero())).thenReturn(false);
+
+        Throwable exception = Assertions.catchThrowable(
+                () -> service.atualizar(conteiner)
+        );
+
+        assertThat(exception)
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Id do conteiner nulo.");
+
+        verify(repository, Mockito.never()).delete(conteiner);
+
+    }
+
 
     private Conteiner getConteiner() {
         return Conteiner.builder()

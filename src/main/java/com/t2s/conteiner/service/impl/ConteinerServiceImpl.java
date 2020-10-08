@@ -7,7 +7,8 @@ import com.t2s.conteiner.service.ConteinerService;
 
 import java.util.Optional;
 
-public class ConteinerServiceImpl implements ConteinerService {
+public class
+ConteinerServiceImpl implements ConteinerService {
 
     private ConteinerRepository repository;
 
@@ -34,5 +35,16 @@ public class ConteinerServiceImpl implements ConteinerService {
             throw new IllegalArgumentException("Id do conteiner nulo.");
         }
         repository.delete(conteiner);
+    }
+
+    @Override
+    public Conteiner atualizar(Conteiner conteiner) {
+        if(repository.existsByNumero(conteiner.getNumero())) {
+            throw new NumeroConteinerException("Container já cadastrado com esse número.");
+        }
+        if (conteiner == null || conteiner.getId() == null) {
+            throw new IllegalArgumentException("Id do conteiner nulo.");
+        }
+        return repository.save(conteiner);
     }
 }

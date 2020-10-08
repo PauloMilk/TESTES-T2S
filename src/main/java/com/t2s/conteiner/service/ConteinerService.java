@@ -13,4 +13,6 @@ public interface ConteinerService {
     Optional<Conteiner> obterPeloId(Long id);
 
     void remover(Conteiner conteiner);
+
+    Conteiner atualizar(Conteiner conteiner);
 }
