@@ -13,9 +13,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -166,6 +171,22 @@ public class ConteinerServiceTest {
                 .hasMessage("Id do conteiner nulo.");
 
         verify(repository, Mockito.never()).delete(conteiner);
+
+    }
+
+    @Test
+    @DisplayName("Deve filtrar conteiners pelas propriedades")
+    public void filtrarConteiners() {
+        Conteiner conteiner = getConteinerComId();
+
+        Page<Conteiner> page = new PageImpl<Conteiner>(Arrays.asList(conteiner), PageRequest.of(0, 10), 1);
+        Mockito.when(repository.findAll(Mockito.any(Example.class), Mockito.any(PageRequest.class)))
+                .thenReturn(page);
+        Page<Conteiner> result = service.buscar(conteiner, PageRequest.of(0, 10));
+        assertThat(result.getTotalElements()).isEqualTo(1);
+        assertThat(result.getContent()).isEqualTo(Arrays.asList(conteiner));
+        assertThat(result.getPageable().getPageNumber()).isEqualTo(0);
+        assertThat(result.getPageable().getPageSize()).isEqualTo(10);
 
     }
 

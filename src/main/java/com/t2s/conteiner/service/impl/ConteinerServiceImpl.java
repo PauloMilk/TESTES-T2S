@@ -4,6 +4,10 @@ import com.t2s.conteiner.exception.NumeroConteinerException;
 import com.t2s.conteiner.model.entity.Conteiner;
 import com.t2s.conteiner.model.repository.ConteinerRepository;
 import com.t2s.conteiner.service.ConteinerService;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
 
@@ -39,12 +43,24 @@ ConteinerServiceImpl implements ConteinerService {
 
     @Override
     public Conteiner atualizar(Conteiner conteiner) {
-        if(repository.existsByNumero(conteiner.getNumero())) {
+        if (repository.existsByNumero(conteiner.getNumero())) {
             throw new NumeroConteinerException("Container já cadastrado com esse número.");
         }
         if (conteiner == null || conteiner.getId() == null) {
             throw new IllegalArgumentException("Id do conteiner nulo.");
         }
         return repository.save(conteiner);
+    }
+
+    @Override
+    public Page<Conteiner> buscar(Conteiner filter, Pageable pageRequest) {
+        Example<Conteiner> example = Example.of(filter,
+                ExampleMatcher
+                        .matching()
+                        .withIgnoreCase()
+                        .withIgnoreNullValues()
+                        .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
+        );
+        return repository.findAll(example, pageRequest);
     }
 }
