@@ -1,6 +1,7 @@
 package com.t2s.conteiner.api.controller;
 
 import com.t2s.conteiner.api.dto.ConteinerDTO;
+import com.t2s.conteiner.api.dto.ConteinerFilterDTO;
 import com.t2s.conteiner.exception.RecursoNaoEncontradoException;
 import com.t2s.conteiner.model.entity.Conteiner;
 import com.t2s.conteiner.model.enums.CategoriaConteinerEnum;
@@ -68,7 +69,7 @@ public class ConteinerController {
 
     @GetMapping
     @ApiOperation("Busca conteineres pelo filtro")
-    public PageImpl<ConteinerDTO> buscar(ConteinerDTO dto, Pageable pageRequest) {
+    public PageImpl<ConteinerDTO> buscar(@Valid ConteinerFilterDTO dto, Pageable pageRequest) {
         Conteiner filter = modelMapper.map(dto, Conteiner.class);
         Page<Conteiner> result = service.buscar(filter, pageRequest);
         List<ConteinerDTO> list = result.getContent().stream()
