@@ -6,6 +6,8 @@ import com.t2s.conteiner.model.entity.Conteiner;
 import com.t2s.conteiner.model.enums.CategoriaConteinerEnum;
 import com.t2s.conteiner.model.enums.StatusConteinerEnum;
 import com.t2s.conteiner.service.ConteinerService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -21,12 +23,14 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(value = "/api/conteineres")
 @RequiredArgsConstructor
+@Api(tags = {"Conteiner Controller"})
 public class ConteinerController {
 
     private final ConteinerService service;
     private final ModelMapper modelMapper;
 
     @PostMapping
+    @ApiOperation("Cria um conteiner")
     @ResponseStatus(HttpStatus.CREATED)
     public ConteinerDTO criar(@RequestBody @Valid ConteinerDTO dto) {
         Conteiner entity = modelMapper.map(dto, Conteiner.class);
@@ -35,12 +39,14 @@ public class ConteinerController {
     }
 
     @GetMapping("{id}")
+    @ApiOperation("Busca um conteiner pelo id")
     public ConteinerDTO obterPeloId(@PathVariable Long id) {
         Conteiner conteiner = service.obterPeloId(id).orElseThrow(() -> new RecursoNaoEncontradoException("Container não encontrado pelo id informado."));
         return modelMapper.map(conteiner, ConteinerDTO.class);
     }
 
     @DeleteMapping("{id}")
+    @ApiOperation("Remove um conteiner pelo id")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removerPeloId(@PathVariable Long id) {
         Conteiner conteiner = service.obterPeloId(id).orElseThrow(() -> new RecursoNaoEncontradoException("Container não encontrado pelo id informado."));
@@ -48,6 +54,7 @@ public class ConteinerController {
     }
 
     @PutMapping("{id}")
+    @ApiOperation("Atualiza um conteiner pelo id")
     public ConteinerDTO atualizar(@PathVariable Long id, @RequestBody @Valid ConteinerDTO dto) {
         Conteiner conteiner = service.obterPeloId(id).orElseThrow(() -> new RecursoNaoEncontradoException("Container não encontrado pelo id informado."));
         conteiner.setCliente(dto.getCliente());
@@ -60,7 +67,8 @@ public class ConteinerController {
     }
 
     @GetMapping
-    public PageImpl<ConteinerDTO> buscar(@Valid ConteinerDTO dto, Pageable pageRequest) {
+    @ApiOperation("Busca conteineres pelo filtro")
+    public PageImpl<ConteinerDTO> buscar(ConteinerDTO dto, Pageable pageRequest) {
         Conteiner filter = modelMapper.map(dto, Conteiner.class);
         Page<Conteiner> result = service.buscar(filter, pageRequest);
         List<ConteinerDTO> list = result.getContent().stream()
