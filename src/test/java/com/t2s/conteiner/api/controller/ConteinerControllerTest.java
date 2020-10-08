@@ -3,6 +3,7 @@ package com.t2s.conteiner.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.t2s.conteiner.api.dto.ConteinerDTO;
+import com.t2s.conteiner.exception.NumeroConteinerException;
 import com.t2s.conteiner.model.entity.Conteiner;
 import com.t2s.conteiner.model.enums.CategoriaConteinerEnum;
 import com.t2s.conteiner.service.ConteinerService;
@@ -28,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
-@WebMvcTest(controllers =  ConteinerController.class)
+@WebMvcTest(controllers = ConteinerController.class)
 @AutoConfigureMockMvc
 public class ConteinerControllerTest {
 
@@ -149,6 +150,29 @@ public class ConteinerControllerTest {
                 .perform(request)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("errors", hasSize(1)));
+
+    }
+
+    @Test
+    @DisplayName("Deve lancar um erro de negocio quando tentar salvar um numero de conteiner ja cadastrado.")
+    public void erroConteinerJaCadastrado() throws Exception {
+        ConteinerDTO conteinerDto = getConteinerDTO();
+        Conteiner conteinerSaved = getConteiner();
+
+        BDDMockito.given(service.salvar(any(Conteiner.class))).willThrow(new NumeroConteinerException("Número de conteiner já cadastrado"));
+
+        String json = new ObjectMapper().writeValueAsString(conteinerDto);
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .post(CONTEINER_API)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(json);
+
+        mvc
+                .perform(request)
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("errors", hasSize(1)))
+                .andExpect(jsonPath("errors[0]").value("Número de conteiner já cadastrado"));
 
     }
 

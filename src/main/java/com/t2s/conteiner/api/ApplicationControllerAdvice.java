@@ -1,6 +1,7 @@
 package com.t2s.conteiner.api;
 
-import com.t2s.conteiner.api.exception.ApiErrors;
+import com.t2s.conteiner.api.dto.ApiErrosDTO;
+import com.t2s.conteiner.exception.NumeroConteinerException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -13,8 +14,14 @@ public class ApplicationControllerAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiErrors handleValidationException(MethodArgumentNotValidException ex) {
+    public ApiErrosDTO handleValidationException(MethodArgumentNotValidException ex) {
         BindingResult bindingResult = ex.getBindingResult();
-        return new ApiErrors(bindingResult);
+        return new ApiErrosDTO(bindingResult);
+    }
+
+    @ExceptionHandler(NumeroConteinerException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiErrosDTO handleNumeroConteinerException(NumeroConteinerException ex) {
+        return new ApiErrosDTO(ex);
     }
 }
