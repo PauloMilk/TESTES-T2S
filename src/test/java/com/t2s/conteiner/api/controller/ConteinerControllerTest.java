@@ -6,6 +6,7 @@ import com.t2s.conteiner.api.dto.ConteinerDTO;
 import com.t2s.conteiner.exception.NumeroConteinerException;
 import com.t2s.conteiner.model.entity.Conteiner;
 import com.t2s.conteiner.model.enums.CategoriaConteinerEnum;
+import com.t2s.conteiner.model.enums.StatusConteinerEnum;
 import com.t2s.conteiner.service.ConteinerService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -203,7 +204,7 @@ public class ConteinerControllerTest {
                 .cliente("T2S")
                 .numero("ABCD1234567")
                 .tipo(20)
-                .status("CHEIO")
+                .status(StatusConteinerEnum.CHEIO)
                 .categoria(CategoriaConteinerEnum.IMPORTACAO)
                 .build();
     }

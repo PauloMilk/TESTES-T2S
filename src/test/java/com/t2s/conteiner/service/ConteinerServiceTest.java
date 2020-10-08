@@ -3,6 +3,7 @@ package com.t2s.conteiner.service;
 import com.t2s.conteiner.exception.NumeroConteinerException;
 import com.t2s.conteiner.model.entity.Conteiner;
 import com.t2s.conteiner.model.enums.CategoriaConteinerEnum;
+import com.t2s.conteiner.model.enums.StatusConteinerEnum;
 import com.t2s.conteiner.model.repository.ConteinerRepository;
 import com.t2s.conteiner.service.impl.ConteinerServiceImpl;
 import org.assertj.core.api.Assertions;
@@ -73,7 +74,7 @@ public class ConteinerServiceTest {
                 .cliente("T2S")
                 .numero("ABCD1234567")
                 .tipo(20)
-                .status("CHEIO")
+                .status(StatusConteinerEnum.CHEIO)
                 .categoria(CategoriaConteinerEnum.IMPORTACAO)
                 .build();
     }
@@ -84,7 +85,7 @@ public class ConteinerServiceTest {
                 .cliente("T2S")
                 .numero("ABCD1234567")
                 .tipo(20)
-                .status("CHEIO")
+                .status(StatusConteinerEnum.CHEIO)
                 .categoria(CategoriaConteinerEnum.IMPORTACAO)
                 .build();
     }
