@@ -23,6 +23,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.Optional;
+
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -177,6 +179,44 @@ public class ConteinerControllerTest {
 
     }
 
+    @Test
+    @DisplayName("Deve obter um conteiner pelo id")
+    public void obterConteinerPeloId() throws Exception {
+        Long id = 1l;
+        Conteiner conteiner = getConteiner();
+        BDDMockito.given(service.obterPeloId(id)).willReturn(Optional.of(conteiner));
+
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .get(CONTEINER_API.concat("/" + id))
+                .accept(MediaType.APPLICATION_JSON);
+        mvc
+                .perform(request)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("id").value(1l))
+                .andExpect(jsonPath("cliente").value(conteiner.getCliente()))
+                .andExpect(jsonPath("numero").value(conteiner.getNumero()))
+                .andExpect(jsonPath("tipo").value(conteiner.getTipo()))
+                .andExpect(jsonPath("status").value(StatusConteinerEnum.CHEIO.toString()))
+                .andExpect(jsonPath("categoria").value(CategoriaConteinerEnum.IMPORTACAO.toString()));
+    }
+
+    @Test
+    @DisplayName("Deve obter um conteiner pelo id")
+    public void erroAoObterConteinerComIdInexistente() throws Exception {
+        Long id = 1l;
+        Conteiner conteiner = getConteiner();
+        BDDMockito.given(service.obterPeloId(id)).willReturn(Optional.empty());
+
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .get(CONTEINER_API.concat("/" + id))
+                .accept(MediaType.APPLICATION_JSON);
+        mvc
+                .perform(request)
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("errors", hasSize(1)))
+                .andExpect(jsonPath("errors[0]").value("Container não encontrado pelo id informado."));
+    }
+
     private ConteinerDTO getInvalidaStatusConteinerDTO() {
         return ConteinerDTO.builder()
                 .cliente("T2S")
@@ -196,7 +236,6 @@ public class ConteinerControllerTest {
                 .categoria("TESTE")
                 .build();
     }
-
 
     private Conteiner getConteiner() {
         return Conteiner.builder()

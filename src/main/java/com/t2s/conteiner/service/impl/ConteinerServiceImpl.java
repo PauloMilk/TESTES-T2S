@@ -5,6 +5,8 @@ import com.t2s.conteiner.model.entity.Conteiner;
 import com.t2s.conteiner.model.repository.ConteinerRepository;
 import com.t2s.conteiner.service.ConteinerService;
 
+import java.util.Optional;
+
 public class ConteinerServiceImpl implements ConteinerService {
 
     private ConteinerRepository repository;
@@ -19,5 +21,10 @@ public class ConteinerServiceImpl implements ConteinerService {
             throw new NumeroConteinerException("Número de conteiner já cadastrado");
         }
         return repository.save(conteiner);
+    }
+
+    @Override
+    public Optional<Conteiner> obterPeloId(Long id) {
+        return Optional.empty();
     }
 }

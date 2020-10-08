@@ -1,6 +1,7 @@
 package com.t2s.conteiner.api.dto;
 
 import com.t2s.conteiner.exception.NumeroConteinerException;
+import com.t2s.conteiner.exception.RecursoNaoEncontradoException;
 import org.springframework.validation.BindingResult;
 
 import java.util.ArrayList;
@@ -17,6 +18,9 @@ public class ApiErrosDTO {
 
 
     public ApiErrosDTO(NumeroConteinerException ex) {
+        this.errors = Arrays.asList(ex.getMessage());
+    }
+    public ApiErrosDTO(RecursoNaoEncontradoException ex) {
         this.errors = Arrays.asList(ex.getMessage());
     }
 
