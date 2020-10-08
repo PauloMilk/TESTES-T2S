@@ -3,6 +3,7 @@ package com.t2s.conteiner.api.dto;
 import com.t2s.conteiner.helper.annotation.TipoConteinerPattern;
 import com.t2s.conteiner.helper.annotation.ValueOfEnum;
 import com.t2s.conteiner.model.enums.CategoriaConteinerEnum;
+import com.t2s.conteiner.model.enums.StatusConteinerEnum;
 import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
@@ -28,7 +29,7 @@ public class ConteinerDTO {
     @TipoConteinerPattern()
     private Integer tipo;
 
-    @NotEmpty
+    @ValueOfEnum(enumClass = StatusConteinerEnum.class)
     private String status;
 
     @ValueOfEnum(enumClass = CategoriaConteinerEnum.class)

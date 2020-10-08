@@ -118,6 +118,60 @@ public class ConteinerControllerTest {
 
     }
 
+    @Test
+    @DisplayName("Deve lancar um erro de validacao quando informar uma categoria fora do padrao para criacao do conteiner.")
+    public void erroCategoriaInvalida() throws Exception {
+        String json = new ObjectMapper().writeValueAsString(getInvalidaCategoriaConteinerDTO());
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .post(CONTEINER_API)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(json);
+
+        mvc
+                .perform(request)
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("errors", hasSize(1)));
+
+    }
+
+    @Test
+    @DisplayName("Deve lancar um erro de validacao quando informar um status fora do padrao para criacao do conteiner.")
+    public void erroStatusInvalida() throws Exception {
+        String json = new ObjectMapper().writeValueAsString(getInvalidaStatusConteinerDTO());
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .post(CONTEINER_API)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(json);
+
+        mvc
+                .perform(request)
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("errors", hasSize(1)));
+
+    }
+
+    private ConteinerDTO getInvalidaStatusConteinerDTO() {
+        return ConteinerDTO.builder()
+                .cliente("T2S")
+                .numero("ABCD1234567")
+                .tipo(20)
+                .status("teste")
+                .categoria("IMPORTACAO")
+                .build();
+    }
+
+    private ConteinerDTO getInvalidaCategoriaConteinerDTO() {
+        return ConteinerDTO.builder()
+                .cliente("T2S")
+                .numero("ABCD1234567")
+                .tipo(20)
+                .status("CHEIO")
+                .categoria("TESTE")
+                .build();
+    }
+
 
     private Conteiner getConteiner() {
         return Conteiner.builder()
@@ -125,7 +179,7 @@ public class ConteinerControllerTest {
                 .cliente("T2S")
                 .numero("ABCD1234567")
                 .tipo(20)
-                .status("cheio")
+                .status("CHEIO")
                 .categoria(CategoriaConteinerEnum.IMPORTACAO)
                 .build();
     }
@@ -135,7 +189,7 @@ public class ConteinerControllerTest {
                 .cliente("T2S")
                 .numero("ABCD1234567")
                 .tipo(20)
-                .status("cheio")
+                .status("CHEIO")
                 .categoria("IMPORTACAO")
                 .build();
     }
@@ -145,7 +199,7 @@ public class ConteinerControllerTest {
                 .cliente("T2S")
                 .numero("A2CD12345B7")
                 .tipo(20)
-                .status("cheio")
+                .status("CHEIO")
                 .categoria("IMPORTACAO")
                 .build();
     }
@@ -155,7 +209,7 @@ public class ConteinerControllerTest {
                 .cliente("T2S")
                 .numero("ABCD1234567")
                 .tipo(21)
-                .status("cheio")
+                .status("CHEIO")
                 .categoria("IMPORTACAO")
                 .build();
     }
