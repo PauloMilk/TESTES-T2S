@@ -16,6 +16,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
@@ -65,6 +67,23 @@ public class ConteinerServiceTest {
         assertThat(exception)
                 .isInstanceOf(NumeroConteinerException.class)
                 .hasMessage("Número de conteiner já cadastrado");
+
+    }
+
+    @Test
+    @DisplayName("Deve obter um conteiner pelo id")
+    public void obterConteinerPeloId() {
+        Long id = 1l;
+        Conteiner conteiner = getConteinerComId();
+        Mockito.when(repository.findById(id)).thenReturn(Optional.of(conteiner));
+        Optional<Conteiner> conteinerSalvo = service.obterPeloId(id);
+
+        assertThat(conteinerSalvo.get().getId()).isEqualTo(id);
+        assertThat(conteinerSalvo.get().getCliente()).isEqualTo(conteiner.getCliente());
+        assertThat(conteinerSalvo.get().getNumero()).isEqualTo(conteiner.getNumero());
+        assertThat(conteinerSalvo.get().getStatus()).isEqualTo(conteiner.getStatus());
+        assertThat(conteinerSalvo.get().getTipo()).isEqualTo(conteiner.getTipo());
+        assertThat(conteinerSalvo.get().getCategoria()).isEqualTo(conteiner.getCategoria());
 
     }
 

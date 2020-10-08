@@ -25,6 +25,6 @@ public class ConteinerServiceImpl implements ConteinerService {
 
     @Override
     public Optional<Conteiner> obterPeloId(Long id) {
-        return Optional.empty();
+        return repository.findById(id);
     }
 }
