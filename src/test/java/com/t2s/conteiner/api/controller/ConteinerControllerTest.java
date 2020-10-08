@@ -51,17 +51,38 @@ public class ConteinerControllerTest {
     @Test
     @DisplayName("Deve criar um conteiner com sucesso.")
     public void criarContainerComSucesso() throws Exception {
+
+//        CENARIO:
+//          DTO:
+//              cliente("T2S")
+//              numero("ABCD1234567")
+//              tipo(20)
+//              status("CHEIO")
+//              categoria("IMPORTACAO")
+//          Conteiner Salvo:
+//              id(1l)
+//              cliente("T2S")
+//              numero("ABCD1234567")
+//              tipo(20)
+//              status("CHEIO")
+//              categoria("IMPORTACAO")
+
         ConteinerDTO conteinerDto = getConteinerDTO();
         Conteiner conteinerSaved = getConteiner();
+
+//        EXECUCAO:
 
         BDDMockito.given(service.salvar(any(Conteiner.class))).willReturn(conteinerSaved);
 
         String json = new ObjectMapper().writeValueAsString(conteinerDto);
+
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
                 .post(CONTEINER_API)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(json);
+
+//        VALIDACAO:
 
         mvc
                 .perform(request)
@@ -78,12 +99,22 @@ public class ConteinerControllerTest {
     @Test
     @DisplayName("Deve lancar um erro de validacao quando nao houver dados suficientes para criacao do conteiner.")
     public void erroDadosInsuficientes() throws Exception {
+//      CENARIO:
+//          DTO:
+//              NULO
+
         String json = new ObjectMapper().writeValueAsString(new ConteinerDTO());
+
+
+//        EXECUCAO:
+
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
                 .post(CONTEINER_API)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(json);
+
+//        VALIDACAO:
 
         mvc
                 .perform(request)
@@ -95,12 +126,27 @@ public class ConteinerControllerTest {
     @Test
     @DisplayName("Deve lancar um erro de validacao quando informar um numero fora do padrao para criacao do conteiner.")
     public void erroNumeroFormatoInvalido() throws Exception {
+//        CENARIO:
+//          DTO:
+//              cliente("T2S")
+//              numero("A2CD12345B7")
+//              tipo(20)
+//              status("CHEIO")
+//              categoria("IMPORTACAO")
+
         String json = new ObjectMapper().writeValueAsString(getInvalidoNumeroConteinerDTO());
+
+
+//        EXECUCAO:
+
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
                 .post(CONTEINER_API)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(json);
+
+
+//        VALIDACAO:
 
         mvc
                 .perform(request)
@@ -112,12 +158,25 @@ public class ConteinerControllerTest {
     @Test
     @DisplayName("Deve lancar um erro de validacao quando informar um tipo fora do padrao para criacao do conteiner.")
     public void erroTipoInvalido() throws Exception {
+//        CENARIO:
+//          DTO:
+//              cliente("T2S")
+//              numero("A2CD12345B7")
+//              tipo(21)
+//              status("CHEIO")
+//              categoria("IMPORTACAO")
+
         String json = new ObjectMapper().writeValueAsString(getInvalidoTipoConteinerDTO());
+
+//        EXECUCAO:
+
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
                 .post(CONTEINER_API)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(json);
+
+//        VALIDACAO:
 
         mvc
                 .perform(request)
@@ -129,12 +188,25 @@ public class ConteinerControllerTest {
     @Test
     @DisplayName("Deve lancar um erro de validacao quando informar uma categoria fora do padrao para criacao do conteiner.")
     public void erroCategoriaInvalida() throws Exception {
+//        CENARIO:
+//          DTO:
+//              cliente("T2S")
+//              numero("ABCD1234567")
+//              tipo(21)
+//              status("CHEIO")
+//              categoria("TESTE")
+
         String json = new ObjectMapper().writeValueAsString(getInvalidaCategoriaConteinerDTO());
+
+//        EXECUCAO:
+
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
                 .post(CONTEINER_API)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(json);
+
+//        VALIDACAO:
 
         mvc
                 .perform(request)
@@ -146,12 +218,25 @@ public class ConteinerControllerTest {
     @Test
     @DisplayName("Deve lancar um erro de validacao quando informar um status fora do padrao para criacao do conteiner.")
     public void erroStatusInvalida() throws Exception {
+//        CENARIO:
+//          DTO:
+//              cliente("T2S")
+//              numero("ABCD1234567")
+//              tipo(21)
+//              status("TESTE")
+//              categoria("IMPORTACAO")
+
         String json = new ObjectMapper().writeValueAsString(getInvalidoStatusConteinerDTO());
+
+//        EXECUCAO:
+
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
                 .post(CONTEINER_API)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(json);
+
+//        VALIDACAO:
 
         mvc
                 .perform(request)
@@ -163,17 +248,37 @@ public class ConteinerControllerTest {
     @Test
     @DisplayName("Deve lancar um erro de negocio quando tentar salvar um numero de conteiner ja cadastrado.")
     public void erroConteinerJaCadastrado() throws Exception {
+//        CENARIO:
+//          DTO:
+//              cliente("T2S")
+//              numero("ABCD1234567")
+//              tipo(20)
+//              status("CHEIO")
+//              categoria("IMPORTACAO")
+//          Conteiner Salvo:
+//              id(1l)
+//              cliente("T2S")
+//              numero("ABCD1234567")
+//              tipo(20)
+//              status("CHEIO")
+//              categoria("IMPORTACAO")
+
         ConteinerDTO conteinerDto = getConteinerDTO();
         Conteiner conteinerSaved = getConteiner();
 
         BDDMockito.given(service.salvar(any(Conteiner.class))).willThrow(new NumeroConteinerException("Número de conteiner já cadastrado"));
 
         String json = new ObjectMapper().writeValueAsString(conteinerDto);
+
+//        EXECUCAO:
+
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
                 .post(CONTEINER_API)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(json);
+
+//        VALIDACAO:
 
         mvc
                 .perform(request)
@@ -186,13 +291,28 @@ public class ConteinerControllerTest {
     @Test
     @DisplayName("Deve obter um conteiner pelo id")
     public void obterConteinerPeloId() throws Exception {
+//        CENARIO:
+//          id: 1l
+//          Conteiner Salvo:
+//              id(1l)
+//              cliente("T2S")
+//              numero("ABCD1234567")
+//              tipo(20)
+//              status("CHEIO")
+//              categoria("IMPORTACAO")
+
         Long id = 1l;
         Conteiner conteiner = getConteiner();
         BDDMockito.given(service.obterPeloId(id)).willReturn(Optional.of(conteiner));
 
+//        EXECUCAO:
+
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
                 .get(CONTEINER_API.concat("/" + id))
                 .accept(MediaType.APPLICATION_JSON);
+
+//        VALIDACAO:
+
         mvc
                 .perform(request)
                 .andExpect(status().isOk())
@@ -207,13 +327,23 @@ public class ConteinerControllerTest {
     @Test
     @DisplayName("Deve obter um conteiner pelo id")
     public void erroAoObterConteinerComIdInexistente() throws Exception {
+//        CENARIO:
+//          id: 1l
+//          Conteiner Salvo:
+//              nulo
+
         Long id = 1l;
         Conteiner conteiner = getConteiner();
         BDDMockito.given(service.obterPeloId(id)).willReturn(Optional.empty());
 
+//        EXECUCAO:
+
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
                 .get(CONTEINER_API.concat("/" + id))
                 .accept(MediaType.APPLICATION_JSON);
+
+//        VALIDACAO:
+
         mvc
                 .perform(request)
                 .andExpect(status().isNotFound())
@@ -224,13 +354,29 @@ public class ConteinerControllerTest {
     @Test
     @DisplayName("Deve remover um conteiner pelo id")
     public void removerConteinerPeloId() throws Exception {
+//        CENARIO:
+//          id: 1l
+//          Conteiner Salvo:
+//              id(1l)
+//              cliente("T2S")
+//              numero("ABCD1234567")
+//              tipo(20)
+//              status("CHEIO")
+//              categoria("IMPORTACAO")
+
         Long id = 1l;
         Conteiner conteinerSaved = getConteiner();
 
         BDDMockito.given(service.obterPeloId(id)).willReturn(Optional.of(conteinerSaved));
+
+//        EXECUCAO:
+
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
                 .delete(CONTEINER_API.concat("/" + id))
                 .accept(MediaType.APPLICATION_JSON);
+
+//        VALIDACAO:
+
         mvc
                 .perform(request)
                 .andExpect(status().isNoContent());
@@ -239,13 +385,23 @@ public class ConteinerControllerTest {
     @Test
     @DisplayName("Deve retornar erro ao tentar remover um conteiner pelo id inexistente")
     public void erroRemoverConteinerPorIdIncorreto() throws Exception {
+//        CENARIO:
+//          id: 1l
+//          Conteiner Salvo:
+//              Nulo
+
         Long id = 1l;
-        Conteiner conteinerSaved = getConteiner();
 
         BDDMockito.given(service.obterPeloId(id)).willReturn(Optional.empty());
+
+//        EXECUCAO:
+
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
                 .delete(CONTEINER_API.concat("/" + id))
                 .accept(MediaType.APPLICATION_JSON);
+
+//        VALIDACAO:
+
         mvc
                 .perform(request)
                 .andExpect(jsonPath("errors", hasSize(1)))
@@ -255,6 +411,22 @@ public class ConteinerControllerTest {
     @Test
     @DisplayName("Deve atualizar um conteiner.")
     public void atualizarConteiner() throws Exception {
+//        CENARIO:
+//          id: 1l
+//          DTO:
+//              cliente("TESTE")
+//              numero("ABCD1234567")
+//              tipo(20)
+//              status("VAZIU")
+//              categoria("IMPORTACAO")
+//          Conteiner Salvo:
+//              id(1l)
+//              cliente("T2S")
+//              numero("ABCD1234567")
+//              tipo(20)
+//              status("CHEIO")
+//              categoria("IMPORTACAO")
+
         Long id = 1l;
         ConteinerDTO conteinerDto = getConteinerDTO();
         conteinerDto.setStatus("VAZIO");
@@ -263,16 +435,21 @@ public class ConteinerControllerTest {
 
         Conteiner containerSalvo = getConteiner();
         BDDMockito.given(service.obterPeloId(id)).willReturn(Optional.of(containerSalvo));
+        BDDMockito.given(service.obterPeloId(id)).willReturn(Optional.of(containerSalvo));
         Conteiner conteinerAtualizado = getConteiner();
         containerSalvo.setStatus(StatusConteinerEnum.VAZIO);
         conteinerAtualizado.setCliente("TESTE");
         BDDMockito.given(service.atualizar(containerSalvo)).willReturn(containerSalvo);
+
+//        EXECUCAO:
 
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
                 .put(CONTEINER_API.concat("/" + id))
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json);
+
+//        VALIDACAO:
 
         mvc.perform(request)
                 .andExpect(status().isOk())
@@ -288,17 +465,26 @@ public class ConteinerControllerTest {
     @Test
     @DisplayName("Deve retornar erro ao tentar atualizar um conteiner pelo id inexistente.")
     public void erroAtualizarConteinerIdInexistente() throws Exception {
+//        CENARIO:
+//          id: 1l
+//          Conteiner Salvo:
+//              nulo
+
         Long id = 1l;
         ConteinerDTO conteinerDto = getConteinerDTO();
         String json = new ObjectMapper().writeValueAsString(conteinerDto);
 
         BDDMockito.given(service.obterPeloId(id)).willReturn(Optional.empty());
 
+//        EXECUCAO:
+
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
                 .put(CONTEINER_API.concat("/" + id))
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json);
+
+//        VALIDACAO:
 
         mvc.perform(request)
                 .andExpect(status().isNotFound())
@@ -309,6 +495,22 @@ public class ConteinerControllerTest {
     @Test
     @DisplayName("Deve retornar erro ao tentar atualizar um conteiner por um numero já cadastrado.")
     public void erroAtualizarConteinerNumeroJaCadastrado() throws Exception {
+//        CENARIO:
+//          id: 1l
+//          DTO:
+//              cliente("TESTE")
+//              numero("ABCD1234567")
+//              tipo(20)
+//              status("VAZIU")
+//              categoria("IMPORTACAO")
+//          Conteiner Salvo:
+//              id(1l)
+//              cliente("T2S")
+//              numero("ABCD1234567")
+//              tipo(20)
+//              status("CHEIO")
+//              categoria("IMPORTACAO")
+
         Long id = 1l;
         ConteinerDTO conteinerDto = getConteinerDTO();
         conteinerDto.setStatus("VAZIO");
@@ -320,13 +522,17 @@ public class ConteinerControllerTest {
         Conteiner conteinerAtualizado = getConteiner();
         containerSalvo.setStatus(StatusConteinerEnum.VAZIO);
         conteinerAtualizado.setCliente("TESTE");
-        BDDMockito.given(service.atualizar(containerSalvo)).willThrow( new NumeroConteinerException("Container já cadastrado com esse número."));
+        BDDMockito.given(service.atualizar(containerSalvo)).willThrow(new NumeroConteinerException("Container já cadastrado com esse número."));
+
+//        EXECUCAO:
 
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
                 .put(CONTEINER_API.concat("/" + id))
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json);
+
+//        VALIDACAO:
 
         mvc.perform(request)
                 .andExpect(status().isBadRequest())
@@ -335,20 +541,80 @@ public class ConteinerControllerTest {
     }
 
     @Test
-    @DisplayName("Deve filtrar conteiners")
+    @DisplayName("Deve filtrar conteiners com filtro")
     public void buscarConteinerComFiltro() throws Exception {
+//        CENARIO:
+//          id: 1l
+//          QUERY:
+//              cliente("TESTE")
+//              numero("ABCD1234567")
+//              tipo(20)
+//              status("VAZIU")
+//              categoria("IMPORTACAO")
+//          Conteiner Salvo:
+//              id(1l)
+//              cliente("T2S")
+//              numero("ABCD1234567")
+//              tipo(20)
+//              status("CHEIO")
+//              categoria("IMPORTACAO")
+
         Long id = 1l;
 
         Conteiner container = getConteiner();
 
-        BDDMockito.given( service.buscar(any(Conteiner.class), any(Pageable.class)) )
-                .willReturn( new PageImpl<Conteiner>(Arrays.asList(container), PageRequest.of(0,100), 1) );
+        BDDMockito.given(service.buscar(any(Conteiner.class), any(Pageable.class)))
+                .willReturn(new PageImpl<Conteiner>(Arrays.asList(container), PageRequest.of(0, 100), 1));
 
         String queryString = String.format("?cliente=%s&numero=%s&tipo=%s&status=%s&categoria=%s&page=0&size=100", container.getCliente(), container.getNumero(), container.getTipo(), container.getStatus(), container.getCategoria());
+
+//        EXECUCAO:
 
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
                 .get(CONTEINER_API.concat(queryString))
                 .accept(MediaType.APPLICATION_JSON);
+
+//        VALIDACAO:
+
+        mvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("content", hasSize(1)))
+                .andExpect(jsonPath("totalElements").value(1))
+                .andExpect(jsonPath("pageable.pageSize").value(100))
+                .andExpect(jsonPath("pageable.pageNumber").value(0));
+    }
+
+    @Test
+    @DisplayName("Deve filtrar conteiners sem filtro")
+    public void buscarConteinerSemFiltro() throws Exception {
+//        CENARIO:
+//          id: 1l
+//          QUERY:
+//
+//          Conteiner Salvo:
+//              id(1l)
+//              cliente("T2S")
+//              numero("ABCD1234567")
+//              tipo(20)
+//              status("CHEIO")
+//              categoria("IMPORTACAO")
+
+        Long id = 1l;
+
+        Conteiner container = getConteiner();
+
+        BDDMockito.given(service.buscar(any(Conteiner.class), any(Pageable.class)))
+                .willReturn(new PageImpl<Conteiner>(Arrays.asList(container), PageRequest.of(0, 100), 1));
+
+        String queryString = String.format("?page=0&size=100");
+
+//        EXECUCAO:
+
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .get(CONTEINER_API.concat(queryString))
+                .accept(MediaType.APPLICATION_JSON);
+
+//        VALIDACAO:
 
         mvc.perform(request)
                 .andExpect(status().isOk())

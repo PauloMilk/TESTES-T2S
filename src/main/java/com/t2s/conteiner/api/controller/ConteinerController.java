@@ -69,7 +69,7 @@ public class ConteinerController {
 
     @GetMapping
     @ApiOperation("Busca conteineres pelo filtro")
-    public PageImpl<ConteinerDTO> buscar(@Valid ConteinerFilterDTO dto, Pageable pageRequest) {
+    public PageImpl<ConteinerDTO> buscar( ConteinerFilterDTO dto, Pageable pageRequest) {
         Conteiner filter = modelMapper.map(dto, Conteiner.class);
         Page<Conteiner> result = service.buscar(filter, pageRequest);
         List<ConteinerDTO> list = result.getContent().stream()
