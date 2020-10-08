@@ -217,6 +217,37 @@ public class ConteinerControllerTest {
                 .andExpect(jsonPath("errors[0]").value("Container não encontrado pelo id informado."));
     }
 
+    @Test
+    @DisplayName("Deve remover um conteiner pelo id")
+    public void removerConteinerPeloId() throws Exception {
+        Long id = 1l;
+        Conteiner conteinerSaved = getConteiner();
+
+        BDDMockito.given(service.obterPeloId(id)).willReturn(Optional.of(conteinerSaved));
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .delete(CONTEINER_API.concat("/" + id))
+                .accept(MediaType.APPLICATION_JSON);
+        mvc
+                .perform(request)
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @DisplayName("Deve retornar erro ao tentar remover um conteiner pelo id inexistente")
+    public void erroRemoverConteinerPorIdIncorreto() throws Exception {
+        Long id = 1l;
+        Conteiner conteinerSaved = getConteiner();
+
+        BDDMockito.given(service.obterPeloId(id)).willReturn(Optional.empty());
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .delete(CONTEINER_API.concat("/" + id))
+                .accept(MediaType.APPLICATION_JSON);
+        mvc
+                .perform(request)
+                .andExpect(jsonPath("errors", hasSize(1)))
+                .andExpect(jsonPath("errors[0]").value("Container não encontrado pelo id informado."));
+    }
+
     private ConteinerDTO getInvalidaStatusConteinerDTO() {
         return ConteinerDTO.builder()
                 .cliente("T2S")

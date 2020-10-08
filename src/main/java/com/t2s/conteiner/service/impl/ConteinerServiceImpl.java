@@ -27,4 +27,12 @@ public class ConteinerServiceImpl implements ConteinerService {
     public Optional<Conteiner> obterPeloId(Long id) {
         return repository.findById(id);
     }
+
+    @Override
+    public void remover(Conteiner conteiner) {
+        if (conteiner == null || conteiner.getId() == null) {
+            throw new IllegalArgumentException("Id do conteiner nulo.");
+        }
+        repository.delete(conteiner);
+    }
 }

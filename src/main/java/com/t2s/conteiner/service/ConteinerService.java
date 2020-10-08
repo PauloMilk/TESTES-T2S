@@ -11,4 +11,6 @@ public interface ConteinerService {
     Conteiner salvar(Conteiner conteiner);
 
     Optional<Conteiner> obterPeloId(Long id);
+
+    void remover(Conteiner conteiner);
 }

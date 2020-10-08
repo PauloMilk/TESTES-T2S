@@ -32,4 +32,11 @@ public class ConteinerController {
         Conteiner conteiner = service.obterPeloId(id).orElseThrow(() -> new RecursoNaoEncontradoException("Container não encontrado pelo id informado."));
         return modelMapper.map(conteiner, ConteinerDTO.class);
     }
+
+    @DeleteMapping("{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removerPeloId(@PathVariable Long id) {
+        Conteiner conteiner = service.obterPeloId(id).orElseThrow(() -> new RecursoNaoEncontradoException("Container não encontrado pelo id informado."));
+        service.remover(conteiner);
+    }
 }

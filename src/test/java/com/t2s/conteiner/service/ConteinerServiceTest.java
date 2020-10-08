@@ -19,6 +19,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
@@ -85,6 +87,27 @@ public class ConteinerServiceTest {
         assertThat(conteinerSalvo.get().getTipo()).isEqualTo(conteiner.getTipo());
         assertThat(conteinerSalvo.get().getCategoria()).isEqualTo(conteiner.getCategoria());
 
+    }
+
+    @Test
+    @DisplayName("Deve remover um conteiner")
+    public void removerConteiner() {
+        Conteiner conteiner = getConteinerComId();
+        service.remover(conteiner);
+
+        verify(repository, times(1)).delete(conteiner);
+    }
+
+    @Test
+    @DisplayName("Deve lançar uma exception ao tentar remover um conteiner sem id.")
+    public void erroRemoverConteinerPorIdInexistente() {
+        Conteiner conteiner = getConteiner();
+        Throwable exception = Assertions.catchThrowable(() -> service.remover(conteiner));
+        assertThat(exception)
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Id do conteiner nulo.");
+
+        verify(repository, Mockito.never()).delete(conteiner);
     }
 
 
