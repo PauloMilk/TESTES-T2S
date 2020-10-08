@@ -44,7 +44,7 @@ public class ConteinerServiceImpl implements ConteinerService {
 
     @Override
     public Conteiner atualizar(Conteiner conteiner) {
-        if (repository.existsByNumero(conteiner.getNumero())) {
+        if (repository.existsByNumeroAndIdNot(conteiner.getNumero(), conteiner.getId())) {
             throw new NumeroConteinerException("Container já cadastrado com esse número.");
         }
         if (conteiner == null || conteiner.getId() == null) {

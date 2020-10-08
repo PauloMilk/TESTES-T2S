@@ -6,4 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ConteinerRepository extends JpaRepository<Conteiner, Long> {
 
     Boolean existsByNumero(String numero);
+    Boolean existsByNumeroAndIdNot(String numero, Long id);
 }
