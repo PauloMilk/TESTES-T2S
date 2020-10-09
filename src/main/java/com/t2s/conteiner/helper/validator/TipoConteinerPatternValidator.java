@@ -10,11 +10,7 @@ public class TipoConteinerPatternValidator implements ConstraintValidator<TipoCo
 
     @Override
     public boolean isValid(Integer value, ConstraintValidatorContext context) {
-        if (value == null) {
-            return true;
-        }
-
-        if (value == 20 || value == 40) {
+        if (value == null || value == 20 || value == 40) {
             return true;
         }
         return false;

@@ -2,7 +2,6 @@ package com.t2s.conteiner.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.t2s.conteiner.helper.annotation.ValueOfEnum;
-import com.t2s.conteiner.model.enums.StatusConteinerEnum;
 import com.t2s.conteiner.model.enums.TipoMovimentacaoConteiner;
 import lombok.*;
 

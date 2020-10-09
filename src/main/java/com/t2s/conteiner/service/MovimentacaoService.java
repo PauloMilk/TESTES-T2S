@@ -1,7 +1,5 @@
 package com.t2s.conteiner.service;
 
-import com.t2s.conteiner.api.dto.MovimentacaoFilterDTO;
-import com.t2s.conteiner.model.entity.Conteiner;
 import com.t2s.conteiner.model.entity.Movimentacao;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

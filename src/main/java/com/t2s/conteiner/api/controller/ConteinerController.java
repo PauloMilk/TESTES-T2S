@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 @Api(tags = {"Conteiner Controller"})
 public class ConteinerController {
 
+    public static final String CONTAINER_NÃO_ENCONTRADO_PELO_ID_INFORMADO = "Container não encontrado pelo id informado.";
     private final ConteinerService service;
     private final ModelMapper modelMapper;
 
@@ -42,7 +43,7 @@ public class ConteinerController {
     @GetMapping("{id}")
     @ApiOperation("Busca um conteiner pelo id")
     public ConteinerDTO obterPeloId(@PathVariable Long id) {
-        Conteiner conteiner = service.obterPeloId(id).orElseThrow(() -> new RecursoNaoEncontradoException("Container não encontrado pelo id informado."));
+        Conteiner conteiner = service.obterPeloId(id).orElseThrow(() -> new RecursoNaoEncontradoException(CONTAINER_NÃO_ENCONTRADO_PELO_ID_INFORMADO));
         return modelMapper.map(conteiner, ConteinerDTO.class);
     }
 
@@ -50,14 +51,14 @@ public class ConteinerController {
     @ApiOperation("Remove um conteiner pelo id")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removerPeloId(@PathVariable Long id) {
-        Conteiner conteiner = service.obterPeloId(id).orElseThrow(() -> new RecursoNaoEncontradoException("Container não encontrado pelo id informado."));
+        Conteiner conteiner = service.obterPeloId(id).orElseThrow(() -> new RecursoNaoEncontradoException(CONTAINER_NÃO_ENCONTRADO_PELO_ID_INFORMADO));
         service.remover(conteiner);
     }
 
     @PutMapping("{id}")
     @ApiOperation("Atualiza um conteiner pelo id")
     public ConteinerDTO atualizar(@PathVariable Long id, @RequestBody @Valid ConteinerDTO dto) {
-        Conteiner conteiner = service.obterPeloId(id).orElseThrow(() -> new RecursoNaoEncontradoException("Container não encontrado pelo id informado."));
+        Conteiner conteiner = service.obterPeloId(id).orElseThrow(() -> new RecursoNaoEncontradoException(CONTAINER_NÃO_ENCONTRADO_PELO_ID_INFORMADO));
         conteiner.setCliente(dto.getCliente());
         conteiner.setStatus(StatusConteinerEnum.valueOf(dto.getStatus()));
         conteiner.setCategoria(CategoriaConteinerEnum.valueOf(dto.getCategoria()));
@@ -75,6 +76,6 @@ public class ConteinerController {
         List<ConteinerDTO> list = result.getContent().stream()
                 .map(entity -> modelMapper.map(entity, ConteinerDTO.class))
                 .collect(Collectors.toList());
-        return new PageImpl<ConteinerDTO>(list, pageRequest, result.getTotalElements());
+        return new PageImpl<>(list, pageRequest, result.getTotalElements());
     }
 }

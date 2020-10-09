@@ -23,7 +23,8 @@ public class ConteinerServiceImpl implements ConteinerService {
 
     @Override
     public Conteiner salvar(Conteiner conteiner) {
-        if (repository.existsByNumero(conteiner.getNumero())) {
+        boolean existsByNumero = repository.existsByNumero(conteiner.getNumero());
+        if (existsByNumero) {
             throw new NumeroConteinerException("Número de conteiner já cadastrado");
         }
         return repository.save(conteiner);
@@ -47,7 +48,8 @@ public class ConteinerServiceImpl implements ConteinerService {
         if (conteiner == null || conteiner.getId() == null) {
             throw new IllegalArgumentException("Id do conteiner nulo.");
         }
-        if (repository.existsByNumeroAndIdNot(conteiner.getNumero(), conteiner.getId())) {
+        boolean existsByNumeroAndIdNot = repository.existsByNumeroAndIdNot(conteiner.getNumero(), conteiner.getId());
+        if (existsByNumeroAndIdNot) {
             throw new NumeroConteinerException("Container já cadastrado com esse número.");
         }
 

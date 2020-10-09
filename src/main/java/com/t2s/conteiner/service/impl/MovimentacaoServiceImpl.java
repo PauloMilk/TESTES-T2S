@@ -1,10 +1,6 @@
 package com.t2s.conteiner.service.impl;
 
-import com.t2s.conteiner.api.dto.MovimentacaoFilterDTO;
-import com.t2s.conteiner.exception.NumeroConteinerException;
-import com.t2s.conteiner.model.entity.Conteiner;
 import com.t2s.conteiner.model.entity.Movimentacao;
-import com.t2s.conteiner.model.repository.ConteinerRepository;
 import com.t2s.conteiner.model.repository.MovimentacaoRepository;
 import com.t2s.conteiner.service.MovimentacaoService;
 import org.springframework.data.domain.Example;

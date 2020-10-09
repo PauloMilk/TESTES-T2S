@@ -6,8 +6,6 @@ import com.t2s.conteiner.api.dto.MovimentacaoSalvarDTO;
 import com.t2s.conteiner.exception.RecursoNaoEncontradoException;
 import com.t2s.conteiner.model.entity.Conteiner;
 import com.t2s.conteiner.model.entity.Movimentacao;
-import com.t2s.conteiner.model.enums.CategoriaConteinerEnum;
-import com.t2s.conteiner.model.enums.StatusConteinerEnum;
 import com.t2s.conteiner.model.enums.TipoMovimentacaoConteiner;
 import com.t2s.conteiner.service.ConteinerService;
 import com.t2s.conteiner.service.MovimentacaoService;
@@ -84,6 +82,6 @@ public class MovimentacaoController {
         List<MovimentacaoDTO> list = result.getContent().stream()
                 .map(entity -> modelMapper.map(entity, MovimentacaoDTO.class))
                 .collect(Collectors.toList());
-        return new PageImpl<MovimentacaoDTO>(list, pageRequest, result.getTotalElements());
+        return new PageImpl<>(list, pageRequest, result.getTotalElements());
     }
 }
