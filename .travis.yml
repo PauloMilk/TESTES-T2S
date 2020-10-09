@@ -3,6 +3,6 @@ jdk:
   - oraclejdk8
 dist: trusty
 before_install:
-  - chmod +x mvnw
+  - chmod +x gradlew
 after_success:
   - bash <(curl -s https://codecov.io/bash)
