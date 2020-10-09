@@ -53,3 +53,7 @@ jacoco {
 	toolVersion = "0.8.5"
 	reportsDir = file("$buildDir/customJacocoReportDir")
 }
+
+bootRun {
+	bootRun.systemProperty 'spring.profiles.active', 'test'
+}
