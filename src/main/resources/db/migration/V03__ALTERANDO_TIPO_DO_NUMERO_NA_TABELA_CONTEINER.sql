@@ -1,1 +1,0 @@
-alter table tb_conteiner modify cd_numero char(11);

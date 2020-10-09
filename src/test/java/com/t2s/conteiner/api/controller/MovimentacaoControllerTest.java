@@ -423,7 +423,7 @@ public class MovimentacaoControllerTest {
 
         Movimentacao movimentacao = getMovimentacao();
         movimentacao.setConteiner(Conteiner.builder().id(1l).tipo(20).numero("ABCD1234567").cliente("t2s").categoria(CategoriaConteinerEnum.EXPORTACAO).status(StatusConteinerEnum.VAZIO).build());
-        BDDMockito.given(service.buscar(any(MovimentacaoFilterDTO.class), any(Pageable.class)))
+        BDDMockito.given(service.buscar(any(Movimentacao.class), any(Pageable.class)))
                 .willReturn(new PageImpl<Movimentacao>(Arrays.asList(movimentacao), PageRequest.of(0, 100), 1));
 
         String queryString = String.format("?navio=%s&tipoMovimentacao=%s&conteinerNumero=%s&conteinerCliente=%s&conteinerTipo=%s&page=0&size=100", movimentacao.getNavio(), movimentacao.getTipo().toString(), movimentacao.getConteiner().getNumero(), movimentacao.getConteiner().getCliente(), movimentacao.getConteiner().getTipo());
@@ -461,7 +461,7 @@ public class MovimentacaoControllerTest {
 
         Movimentacao movimentacao = getMovimentacao();
         movimentacao.setConteiner(Conteiner.builder().id(1l).tipo(20).numero("ABCD1234567").cliente("t2s").categoria(CategoriaConteinerEnum.EXPORTACAO).status(StatusConteinerEnum.VAZIO).build());
-        BDDMockito.given(service.buscar(any(MovimentacaoFilterDTO.class), any(Pageable.class)))
+        BDDMockito.given(service.buscar(any(Movimentacao.class), any(Pageable.class)))
                 .willReturn(new PageImpl<Movimentacao>(Arrays.asList(movimentacao), PageRequest.of(0, 100), 1));
 
         String queryString = String.format("?page=0&size=100");

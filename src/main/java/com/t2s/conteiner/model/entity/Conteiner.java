@@ -23,7 +23,7 @@ public class Conteiner {
     @Column(name = "nm_cliente")
     private String cliente;
 
-    @Column(name = "cd_numero", unique = true)
+    @Column(name = "cd_numero", unique = true, length = 11)
     private String numero;
 
     @Column(name = "cd_tipo")

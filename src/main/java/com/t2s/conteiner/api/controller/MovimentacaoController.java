@@ -79,8 +79,8 @@ public class MovimentacaoController {
     @GetMapping
     @ApiOperation("Busca movimentacoes pelo filtro")
     public PageImpl<MovimentacaoDTO> buscar( MovimentacaoFilterDTO dto, Pageable pageRequest) {
-
-        Page<Movimentacao> result = service.buscar(dto, pageRequest);
+        Movimentacao filter = modelMapper.map(dto, Movimentacao.class);
+        Page<Movimentacao> result = service.buscar(filter, pageRequest);
         List<MovimentacaoDTO> list = result.getContent().stream()
                 .map(entity -> modelMapper.map(entity, MovimentacaoDTO.class))
                 .collect(Collectors.toList());

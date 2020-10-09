@@ -44,23 +44,26 @@ public class ConteinerServiceImpl implements ConteinerService {
 
     @Override
     public Conteiner atualizar(Conteiner conteiner) {
-        if (repository.existsByNumeroAndIdNot(conteiner.getNumero(), conteiner.getId())) {
-            throw new NumeroConteinerException("Container já cadastrado com esse número.");
-        }
         if (conteiner == null || conteiner.getId() == null) {
             throw new IllegalArgumentException("Id do conteiner nulo.");
         }
+        if (repository.existsByNumeroAndIdNot(conteiner.getNumero(), conteiner.getId())) {
+            throw new NumeroConteinerException("Container já cadastrado com esse número.");
+        }
+
         return repository.save(conteiner);
     }
 
     @Override
     public Page<Conteiner> buscar(Conteiner filter, Pageable pageRequest) {
+        ExampleMatcher ex = ExampleMatcher
+                .matching()
+                .withIgnoreCase()
+                .withIgnoreNullValues()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+
         Example<Conteiner> example = Example.of(filter,
-                ExampleMatcher
-                        .matching()
-                        .withIgnoreCase()
-                        .withIgnoreNullValues()
-                        .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
+                ex
         );
         return repository.findAll(example, pageRequest);
     }

@@ -20,5 +20,5 @@ public interface MovimentacaoService {
 
     Movimentacao atualizar(Movimentacao movimentacao);
 
-    Page<Movimentacao> buscar(MovimentacaoFilterDTO filter, Pageable pageRequest);
+    Page<Movimentacao> buscar(Movimentacao filter, Pageable pageRequest);
 }

@@ -47,6 +47,30 @@ public class ConteinerRepositoryTest {
         assertThat(exists).isFalse();
     }
 
+
+    @Test
+    @DisplayName("Deve retornar verdadeiro quando nao existir um conteiner na base com numero informado e id.")
+    public void verdadeiroQuandoExistirNumeroEId() {
+
+        String numero = "ABCD1234567";
+        Conteiner conteiner = getConteiner();
+        Long id = (Long) entityManager.persistAndGetId(conteiner);
+        boolean exists = repository.existsByNumeroAndIdNot(numero, id+1);
+
+        assertThat(exists).isTrue();
+    }
+
+    @Test
+    @DisplayName("Deve retornar falso quando existir um conteiner na base com numero informado e id.")
+    public void falsoQuandoNaoExistirNumeroEId() {
+
+        String numero = "ABCD1234567";
+        boolean exists = repository.existsByNumeroAndIdNot(numero, 1l);
+
+        assertThat(exists).isFalse();
+    }
+
+
     private Conteiner getConteiner() {
         return Conteiner.builder()
                 .cliente("T2S")
@@ -56,4 +80,5 @@ public class ConteinerRepositoryTest {
                 .categoria(CategoriaConteinerEnum.IMPORTACAO)
                 .build();
     }
+
 }
